@@ -403,7 +403,10 @@ definitions:
         type: "string"
       available:
         type: "number"
+      freeze:
+        type: "number"
     example:
+      freeze: 6.02745618307040320615897144307382404804229736328125
       available: 0.80082819046101150206595775671303272247314453125
       currency: "currency"
   ErrorResponse:
