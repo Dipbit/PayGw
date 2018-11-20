@@ -216,6 +216,11 @@ paths:
         description: "数量\n"
         required: true
         type: "string"
+      - name: "address"
+        in: "query"
+        description: "地址\n"
+        required: true
+        type: "string"
       - name: "clientOrderID"
         in: "query"
         description: "客户端请求唯一ID，用于订单唯一性"
@@ -378,7 +383,7 @@ definitions:
       time:
         type: "string"
       amount:
-        type: "string"
+        type: "number"
       currency:
         type: "string"
         description: "币种"
@@ -399,7 +404,7 @@ definitions:
         - "FAIL"
     description: "提币查询列表结果"
     example:
-      amount: "amount"
+      amount: 0.80082819046101150206595775671303272247314453125
       transactionNum: "transactionNum"
       clientOrderID: "clientOrderID"
       txID: "txID"
@@ -479,14 +484,14 @@ definitions:
     example:
       hasNext: true
       items:
-      - amount: "amount"
+      - amount: 0.80082819046101150206595775671303272247314453125
         transactionNum: "transactionNum"
         clientOrderID: "clientOrderID"
         txID: "txID"
         currency: "currency"
         time: "time"
         status: "PROCESSING"
-      - amount: "amount"
+      - amount: 0.80082819046101150206595775671303272247314453125
         transactionNum: "transactionNum"
         clientOrderID: "clientOrderID"
         txID: "txID"
@@ -528,6 +533,12 @@ parameters:
     name: "amount"
     in: "query"
     description: "数量\n"
+    required: true
+    type: "string"
+  Address:
+    name: "address"
+    in: "query"
+    description: "地址\n"
     required: true
     type: "string"
   Memo:
