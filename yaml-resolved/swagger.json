@@ -219,7 +219,7 @@ paths:
       - name: "clientOrderID"
         in: "query"
         description: "客户端请求唯一ID，用于订单唯一性"
-        required: false
+        required: true
         type: "string"
       - name: "memo"
         in: "query"
@@ -530,7 +530,7 @@ parameters:
     name: "clientOrderID"
     in: "query"
     description: "客户端请求唯一ID，用于订单唯一性"
-    required: false
+    required: true
     type: "string"
   ClientOrderIDOptional:
     name: "clientOrderID"
