@@ -120,11 +120,6 @@ paths:
         description: "数字货币代号，如ETH， BTC\n"
         required: true
         type: "string"
-      - name: "memo"
-        in: "query"
-        description: "部分数字货币充提币时需要的特殊备注"
-        required: false
-        type: "string"
       responses:
         200:
           description: "Success"
@@ -224,6 +219,11 @@ paths:
       - name: "clientOrderID"
         in: "query"
         description: "客户端请求唯一ID，用于订单唯一性"
+        required: false
+        type: "string"
+      - name: "memo"
+        in: "query"
+        description: "部分数字货币充提币时需要的特殊备注"
         required: false
         type: "string"
       responses:
