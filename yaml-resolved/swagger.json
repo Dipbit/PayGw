@@ -120,11 +120,6 @@ paths:
         description: "数字货币代号，如ETH， BTC\n"
         required: true
         type: "string"
-      - name: "memo"
-        in: "query"
-        description: "部分数字货币充提币时需要的特殊备注"
-        required: false
-        type: "string"
       responses:
         200:
           description: "Success"
@@ -221,9 +216,19 @@ paths:
         description: "数量\n"
         required: true
         type: "string"
+      - name: "address"
+        in: "query"
+        description: "地址\n"
+        required: true
+        type: "string"
       - name: "clientOrderID"
         in: "query"
         description: "客户端请求唯一ID，用于订单唯一性"
+        required: true
+        type: "string"
+      - name: "memo"
+        in: "query"
+        description: "部分数字货币充提币时需要的特殊备注"
         required: false
         type: "string"
       responses:
@@ -357,7 +362,12 @@ definitions:
       txID:
         type: "string"
         description: "链上transactionID"
-      status: {}
+      status:
+        type: "string"
+        enum:
+        - "PROCESSING"
+        - "SUCCESS"
+        - "FAIL"
     description: "充币查询列表结果"
     example:
       amount: 0.80082819046101150206595775671303272247314453125
@@ -366,14 +376,14 @@ definitions:
       txID: "txID"
       currency: "currency"
       time: "time"
-      status: ""
+      status: "PROCESSING"
   WithdrawListResponse:
     type: "object"
     properties:
       time:
         type: "string"
       amount:
-        type: "string"
+        type: "number"
       currency:
         type: "string"
         description: "币种"
@@ -386,16 +396,21 @@ definitions:
       txID:
         type: "string"
         description: "链上transactionID"
-      status: {}
+      status:
+        type: "string"
+        enum:
+        - "PROCESSING"
+        - "SUCCESS"
+        - "FAIL"
     description: "提币查询列表结果"
     example:
-      amount: "amount"
+      amount: 0.80082819046101150206595775671303272247314453125
       transactionNum: "transactionNum"
       clientOrderID: "clientOrderID"
       txID: "txID"
       currency: "currency"
       time: "time"
-      status: ""
+      status: "PROCESSING"
   BalanceResponse:
     type: "object"
     properties:
@@ -450,14 +465,14 @@ definitions:
         txID: "txID"
         currency: "currency"
         time: "time"
-        status: ""
+        status: "PROCESSING"
       - amount: 0.80082819046101150206595775671303272247314453125
         transactionNum: "transactionNum"
         merchangtUserID: "merchangtUserID"
         txID: "txID"
         currency: "currency"
         time: "time"
-        status: ""
+        status: "PROCESSING"
   inline_response_200_1:
     properties:
       items:
@@ -469,20 +484,20 @@ definitions:
     example:
       hasNext: true
       items:
-      - amount: "amount"
+      - amount: 0.80082819046101150206595775671303272247314453125
         transactionNum: "transactionNum"
         clientOrderID: "clientOrderID"
         txID: "txID"
         currency: "currency"
         time: "time"
-        status: ""
-      - amount: "amount"
+        status: "PROCESSING"
+      - amount: 0.80082819046101150206595775671303272247314453125
         transactionNum: "transactionNum"
         clientOrderID: "clientOrderID"
         txID: "txID"
         currency: "currency"
         time: "time"
-        status: ""
+        status: "PROCESSING"
 parameters:
   Token:
     name: "token"
@@ -520,6 +535,12 @@ parameters:
     description: "数量\n"
     required: true
     type: "string"
+  Address:
+    name: "address"
+    in: "query"
+    description: "地址\n"
+    required: true
+    type: "string"
   Memo:
     name: "memo"
     in: "query"
@@ -530,7 +551,7 @@ parameters:
     name: "clientOrderID"
     in: "query"
     description: "客户端请求唯一ID，用于订单唯一性"
-    required: false
+    required: true
     type: "string"
   ClientOrderIDOptional:
     name: "clientOrderID"
