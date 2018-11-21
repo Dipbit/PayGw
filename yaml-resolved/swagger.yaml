@@ -13,7 +13,7 @@ basePath: "/"
 schemes:
 - "https"
 paths:
-  /v1/key/init:
+  /api/v1/key/init:
     post:
       tags:
       - "User"
