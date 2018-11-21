@@ -70,3 +70,6 @@ currency=ETH&merchantID=2018071202345&merchantUserID=userA，将签名数据通�
 ```http request
 /api/v1/currencies
 ```
+
+## 客户端
+使用者可根据API定义（https://github.com/Dipbit/PayGw/blob/master/yaml-resolved/swagger.yaml），在 https://editor.swagger.io 自主生成客户端代码
