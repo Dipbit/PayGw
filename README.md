@@ -15,6 +15,7 @@
 正式环境 | https://paygw.dipbit.com/key/init
 
 ## 支付API
+API 详见 https://app.swaggerhub.com/apis/HollyAtGwave/dipbit-pay_gateway_api/1.0.0
 1. **充币申请**
 
 2. **充币查询**
