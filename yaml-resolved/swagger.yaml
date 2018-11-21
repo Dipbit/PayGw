@@ -51,7 +51,12 @@ paths:
       operationId: "getCurrencies"
       produces:
       - "application/json"
-      parameters: []
+      parameters:
+      - name: "merchantID"
+        in: "query"
+        description: "商户ID\n"
+        required: true
+        type: "string"
       responses:
         200:
           description: "Success"
