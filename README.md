@@ -12,7 +12,7 @@ API定义详见 https://app.swaggerhub.com/apis/HollyAtGwave/dipbit-pay_gateway_
 
 ## 激活授权API
 ```http request
-/v1/key/init
+/api/v1/key/init
 ```
 该API仅在后台人员进行初始化后的24小时进行调用有效，并且参数token只可调用一次，若超过时效或者token已使用，请联系客服人员进行重置。
 ## 请求签名
