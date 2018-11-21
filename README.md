@@ -36,9 +36,9 @@ currency=ETH&merchantID=2018071202345&merchantUserID=userA，将签名数据通�
       signature.initSign(priKey);  
       //更新  
       signature.update(data);  
-      s = signature.sign()
+      YOUR_SIGNATURE = signature.sign()
     ```
- * 将签名得到的signature和accessKey作为HTTP请求的header参数X-AccessKeyId=accessKey， signature=YOUR_SIGNATURE
+ * 将签名得到的签名YOUR_SIGNATURE和accessKey作为HTTP请求的header参数X-AccessKeyId=accessKey， signature=YOUR_SIGNATURE
 
 ## 支付API
 1. **充币申请**
