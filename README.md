@@ -12,11 +12,11 @@ API定义详见 https://app.swaggerhub.com/apis/HollyAtGwave/dipbit-pay_gateway_
 
 ## 激活授权API
 ```http request
-/api/v1/key/init
+/v1/key/init
 ```
 该API仅在后台人员进行初始化后的24小时进行调用有效，并且参数token只可调用一次，若超过时效或者token已使用，请联系客服人员进行重置。
 ## 请求签名
-除了激活授权API的调用，支付API所有API请求需要用到激活授权API返回的accessKey和accessSecret来进行数字签名，请妥善保存防止泄露。
+除了激活授权API的调用，支付API所有API请求需要用到激活授权API返回的accessKey和accessSecret（base64编码）来进行数字签名，请妥善保存防止泄露。
 数字签名采用MD5withRSA算法。
 API请求的签名和调用步骤如下：
 * 将API请求的所有参数名称按照字典顺序进行排序，如访问API /api/v1/deposit/apply, 请求参数为merchantID=2018071202345， 
