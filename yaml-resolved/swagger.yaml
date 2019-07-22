@@ -1,583 +1,959 @@
----
 swagger: "2.0"
 info:
-  description: "Dipbit Pay Gateway API"
+  title: Dipbit Pay Gateway API
   version: "1.0.0"
-  title: "Dipbit Pay Gateway API"
+  description: Dipbit Pay Gateway API
   contact:
-    name: "API Support"
-    url: "https://dipbitsupport.zendesk.com/hc/en-us"
-    email: "support@mail.dipbit.com"
-host: "paygw.dipbit.com"
-basePath: "/"
-schemes:
-- "https"
-paths:
-  /api/v1/key/init:
-    post:
-      tags:
-      - "User"
-      summary: "init merchant ACCESS_KEY and ACCESS_TOKEN"
-      description: "初始化accessKey"
-      operationId: "init"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "merchantID"
-        in: "query"
-        description: "商户ID\n"
-        required: true
-        type: "string"
-      - name: "token"
-        in: "query"
-        description: "初始化token"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "Access Key信息"
-          schema:
-            $ref: "#/definitions/AccessTokenResponse"
-        401:
-          description: "ERROR Response"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /api/v1/currencies:
-    get:
-      tags:
-      - "Asset"
-      summary: "获取所有支持的币种"
-      description: "获取所有的支持币种"
-      operationId: "getCurrencies"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "merchantID"
-        in: "query"
-        description: "商户ID\n"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "Success"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Currency"
-        401:
-          description: "ERROR Response"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-      security:
-      - apiKeyId: []
-      - apiSignature: []
-  /api/v1/balance:
-    get:
-      tags:
-      - "Asset"
-      summary: "查询余额"
-      description: "查询余额"
-      operationId: "balance"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "merchantID"
-        in: "query"
-        description: "商户ID\n"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "Success"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/BalanceResponse"
-        401:
-          description: "ERROR Response"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-      security:
-      - apiKeyId: []
-      - apiSignature: []
-  /api/v1/deposit/apply:
-    post:
-      tags:
-      - "Deposit"
-      summary: "申请充币"
-      description: "申请充币"
-      operationId: "depositApply"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "merchantID"
-        in: "query"
-        description: "商户ID\n"
-        required: true
-        type: "string"
-      - name: "merchantUserID"
-        in: "query"
-        description: "商户用户唯一标识\n"
-        required: true
-        type: "string"
-      - name: "currency"
-        in: "query"
-        description: "数字货币代号，如ETH， BTC\n"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "Success"
-          schema:
-            $ref: "#/definitions/DepositApplyResponse"
-        401:
-          description: "ERROR Response"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-      security:
-      - apiKeyId: []
-      - apiSignature: []
-  /api/v1/deposit/list:
-    get:
-      tags:
-      - "Deposit"
-      summary: "获取充币记录"
-      description: "获取充币记录"
-      operationId: "getDepositList"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "merchantID"
-        in: "query"
-        description: "商户ID\n"
-        required: true
-        type: "string"
-      - name: "merchantUserID"
-        in: "query"
-        description: "商户用户唯一标识\n"
-        required: false
-        type: "string"
-      - name: "limit"
-        in: "query"
-        description: "Limit the result default 100"
-        required: false
-        type: "integer"
-        default: 100
-        maximum: 100
-        minimum: 10
-      - name: "offset"
-        in: "query"
-        description: "offset the result default 0"
-        required: false
-        type: "integer"
-        default: 0
-        minimum: 0
-      responses:
-        200:
-          description: "Success"
-          schema:
-            type: "object"
-            properties:
-              items:
-                type: "array"
-                items:
-                  $ref: "#/definitions/DepositListResponse"
-              hasNext:
-                type: "boolean"
-        401:
-          description: "ERROR Response"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-      security:
-      - apiKeyId: []
-      - apiSignature: []
-  /api/v1/withdraw/apply:
-    post:
-      tags:
-      - "Withdraw"
-      summary: "申请提币"
-      description: "申请提币"
-      operationId: "withdrawApply"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "merchantID"
-        in: "query"
-        description: "商户ID\n"
-        required: true
-        type: "string"
-      - name: "merchantUserID"
-        in: "query"
-        description: "商户用户唯一标识\n"
-        required: true
-        type: "string"
-      - name: "currency"
-        in: "query"
-        description: "数字货币代号，如ETH， BTC\n"
-        required: true
-        type: "string"
-      - name: "amount"
-        in: "query"
-        description: "数量\n"
-        required: true
-        type: "string"
-      - name: "address"
-        in: "query"
-        description: "地址\n"
-        required: true
-        type: "string"
-      - name: "clientOrderID"
-        in: "query"
-        description: "客户端请求唯一ID，用于订单唯一性"
-        required: true
-        type: "string"
-      - name: "memo"
-        in: "query"
-        description: "部分数字货币充提币时需要的特殊备注"
-        required: false
-        type: "string"
-      responses:
-        200:
-          description: "Success"
-          schema:
-            $ref: "#/definitions/WithdrawApplyResponse"
-        401:
-          description: "ERROR Response"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-      security:
-      - apiKeyId: []
-      - apiSignature: []
-  /api/v1/withdraw/list:
-    get:
-      tags:
-      - "Withdraw"
-      summary: "提币记录查询"
-      description: "提币记录查询"
-      operationId: "withdrawList"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "clientOrderID"
-        in: "query"
-        description: "客户端请求唯一ID，用于订单唯一性"
-        required: false
-        type: "string"
-      - name: "merchantID"
-        in: "query"
-        description: "商户ID\n"
-        required: true
-        type: "string"
-      - name: "limit"
-        in: "query"
-        description: "Limit the result default 100"
-        required: false
-        type: "integer"
-        default: 100
-        maximum: 100
-        minimum: 10
-      - name: "offset"
-        in: "query"
-        description: "offset the result default 0"
-        required: false
-        type: "integer"
-        default: 0
-        minimum: 0
-      responses:
-        200:
-          description: "Success"
-          schema:
-            type: "object"
-            properties:
-              items:
-                type: "array"
-                items:
-                  $ref: "#/definitions/WithdrawListResponse"
-              hasNext:
-                type: "boolean"
-        401:
-          description: "ERROR Response"
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-      security:
-      - apiKeyId: []
-      - apiSignature: []
+    name: API Support
+    url: 'https://dipbitsupport.zendesk.com/hc/en-us'
+    email: support@mail.dipbit.com
+
+# host: paygw.dipbit.com
+# basePath: /v1
+# schemes:
+#   - http
+
 securityDefinitions:
-  apiKeyId:
-    type: "apiKey"
-    name: "X-AccessKeyId"
-    in: "header"
-  apiSignature:
-    type: "apiKey"
-    name: "signature"
-    in: "header"
-definitions:
-  AccessTokenResponse:
-    type: "object"
-    properties:
-      accessKey:
-        type: "string"
-      accessSecret:
-        type: "string"
-    description: "初始化AccessKey返回对象"
-    example:
-      accessKey: "accessKey"
-      accessSecret: "accessSecret"
-  DepositApplyResponse:
-    type: "object"
-    properties:
-      address:
-        type: "string"
-      currency:
-        type: "string"
-      memo:
-        type: "string"
-    description: "充币申请返回对象"
-    example:
-      address: "address"
-      memo: "memo"
-      currency: "currency"
-  WithdrawApplyResponse:
-    type: "object"
-    properties:
-      transactionNum:
-        type: "string"
-      clientOrderID:
-        type: "string"
-    description: "提币申请返回对象"
-    example:
-      transactionNum: "transactionNum"
-      clientOrderID: "clientOrderID"
-  DepositListResponse:
-    type: "object"
-    properties:
-      time:
-        type: "string"
-      amount:
-        type: "number"
-      currency:
-        type: "string"
-        description: "币种"
-      merchangtUserID:
-        type: "string"
-        description: "商户用户唯一标识"
-      transactionNum:
-        type: "string"
-        description: "Dipbit系统交易ID"
-      txID:
-        type: "string"
-        description: "链上transactionID"
-      status:
-        type: "string"
-        enum:
-        - "PROCESSING"
-        - "SUCCESS"
-        - "FAIL"
-    description: "充币查询列表结果"
-    example:
-      amount: 0.80082819046101150206595775671303272247314453125
-      transactionNum: "transactionNum"
-      merchangtUserID: "merchangtUserID"
-      txID: "txID"
-      currency: "currency"
-      time: "time"
-      status: "PROCESSING"
-  WithdrawListResponse:
-    type: "object"
-    properties:
-      time:
-        type: "string"
-      amount:
-        type: "number"
-      currency:
-        type: "string"
-        description: "币种"
-      transactionNum:
-        type: "string"
-        description: "Dipbit系统交易ID"
-      clientOrderID:
-        type: "string"
-        description: "客户方系统请求唯一ID"
-      txID:
-        type: "string"
-        description: "链上transactionID"
-      status:
-        type: "string"
-        enum:
-        - "PROCESSING"
-        - "SUCCESS"
-        - "FAIL"
-    description: "提币查询列表结果"
-    example:
-      amount: 0.80082819046101150206595775671303272247314453125
-      transactionNum: "transactionNum"
-      clientOrderID: "clientOrderID"
-      txID: "txID"
-      currency: "currency"
-      time: "time"
-      status: "PROCESSING"
-  BalanceResponse:
-    type: "object"
-    properties:
-      currency:
-        type: "string"
-      available:
-        type: "number"
-      freeze:
-        type: "number"
-    example:
-      freeze: 6.02745618307040320615897144307382404804229736328125
-      available: 0.80082819046101150206595775671303272247314453125
-      currency: "currency"
-  ErrorResponse:
-    type: "object"
-    properties:
-      msg:
-        type: "string"
-      code:
-        type: "string"
-  Currency:
-    type: "object"
-    properties:
-      currency:
-        type: "string"
-        description: "数字货币代号"
-      precision:
-        type: "number"
-        description: "数字货币精度"
-      miniWithdrawAmount:
-        type: "number"
-        description: "最小提币额度"
-    description: "货币"
-    example:
-      miniWithdrawAmount: 6.02745618307040320615897144307382404804229736328125
-      precision: 0.80082819046101150206595775671303272247314453125
-      currency: "currency"
-  inline_response_200:
-    properties:
-      items:
-        type: "array"
-        items:
-          $ref: "#/definitions/DepositListResponse"
-      hasNext:
-        type: "boolean"
-    example:
-      hasNext: true
-      items:
-      - amount: 0.80082819046101150206595775671303272247314453125
-        transactionNum: "transactionNum"
-        merchangtUserID: "merchangtUserID"
-        txID: "txID"
-        currency: "currency"
-        time: "time"
-        status: "PROCESSING"
-      - amount: 0.80082819046101150206595775671303272247314453125
-        transactionNum: "transactionNum"
-        merchangtUserID: "merchangtUserID"
-        txID: "txID"
-        currency: "currency"
-        time: "time"
-        status: "PROCESSING"
-  inline_response_200_1:
-    properties:
-      items:
-        type: "array"
-        items:
-          $ref: "#/definitions/WithdrawListResponse"
-      hasNext:
-        type: "boolean"
-    example:
-      hasNext: true
-      items:
-      - amount: 0.80082819046101150206595775671303272247314453125
-        transactionNum: "transactionNum"
-        clientOrderID: "clientOrderID"
-        txID: "txID"
-        currency: "currency"
-        time: "time"
-        status: "PROCESSING"
-      - amount: 0.80082819046101150206595775671303272247314453125
-        transactionNum: "transactionNum"
-        clientOrderID: "clientOrderID"
-        txID: "txID"
-        currency: "currency"
-        time: "time"
-        status: "PROCESSING"
+    apiKeyId:
+      type: apiKey
+      in: header
+      name: X-AccessKeyId
+    apiSignature:
+      type: apiKey
+      in: header
+      name: signature
 parameters:
   Token:
-    name: "token"
-    in: "query"
+    name: token
+    in: query
+    type: string
+    required: true
     description: "初始化token"
-    required: true
-    type: "string"
   MerchantID:
-    name: "merchantID"
-    in: "query"
-    description: "商户ID\n"
+    name: merchantID
+    in: query
+    type: string
     required: true
-    type: "string"
+    description: |
+      商户ID
   MerchantUserID:
-    name: "merchantUserID"
-    in: "query"
-    description: "商户用户唯一标识\n"
+    name: merchantUserID
+    type: string
+    in: query
     required: true
-    type: "string"
+    description: |
+      商户用户唯一标识
   MerchantUserIDOptional:
-    name: "merchantUserID"
-    in: "query"
-    description: "商户用户唯一标识\n"
-    required: false
-    type: "string"
+    name: merchantUserID
+    type: string
+    in: query
+    description: |
+      商户用户唯一标识
   Currency:
-    name: "currency"
-    in: "query"
-    description: "数字货币代号，如ETH， BTC\n"
+    type: string
+    name: currency
+    in: query
     required: true
-    type: "string"
+    description: |
+      数字货币代号，如ETH， BTC
+  ExchangeCurrency:
+    type: string
+    name: exchangeCurrency
+    in: query
+    required: true
+    description: |
+      汇兑数字货币代号，如ETH， BTC
   Amount:
-    name: "amount"
-    in: "query"
-    description: "数量\n"
+    type: string
+    name: amount
+    in: query
     required: true
-    type: "string"
+    description: |
+      数量
+  TargetCurrency:
+      type: string
+      name: targetCurrency
+      in: query
+      required: true
+      description: |
+        数字货币代号，如ETH， BTC
   Address:
-    name: "address"
-    in: "query"
-    description: "地址\n"
+    type: string
+    name: address
+    in: query
     required: true
-    type: "string"
+    description: |
+      地址
   Memo:
-    name: "memo"
-    in: "query"
+    type: string
+    name: memo
+    in: query
     description: "部分数字货币充提币时需要的特殊备注"
-    required: false
-    type: "string"
   ClientOrderID:
-    name: "clientOrderID"
-    in: "query"
-    description: "客户端请求唯一ID，用于订单唯一性"
+    type: string
+    name: clientOrderID
+    in: query
     required: true
-    type: "string"
-  ClientOrderIDOptional:
-    name: "clientOrderID"
-    in: "query"
     description: "客户端请求唯一ID，用于订单唯一性"
-    required: false
-    type: "string"
+  ClientOrderIDOptional:
+    type: string
+    name: clientOrderID
+    in: query
+    description: "客户端请求唯一ID，用于订单唯一性"
+  CurrencyOptional:
+    type: string
+    name: currency
+    in: query
+    description: |
+      数字货币代号，如ETH， BTC
   Limit:
-    name: "limit"
-    in: "query"
-    description: "Limit the result default 100"
-    required: false
-    type: "integer"
-    default: 100
+    name: limit
+    in: query
+    description: Limit the result default 100
+    type: integer
     maximum: 100
     minimum: 10
+    default: 100
   Offset:
-    name: "offset"
-    in: "query"
-    description: "offset the result default 0"
-    required: false
-    type: "integer"
-    default: 0
+    name: offset
+    in: query
+    description: offset the result default 0
+    type: integer
     minimum: 0
+    default: 0
+  Symbol:
+      type: string
+      name: symbol
+      in: query
+      required: true
+      description: |
+        交易对，如ETH_BTC
+  WithdrawAutoExchange:
+    name: withdrawAutoExchange
+    in: query
+    required: true
+    description: 0-自动汇兑关闭  1-自动汇兑开启
+    type: integer
+    minimum: 0
+    default: 0
+  DepositAutoExchange:
+    name: depositAutoExchange
+    in: query
+    required: true
+    description: 0-自动汇兑关闭  1-自动汇兑开启
+    type: integer
+    minimum: 0
+    default: 0
+  Option:
+    name: option
+    in: query
+    required: true
+    description: 0-新增 1-修改 2-删除
+    type: integer
+    minimum: 0
+    default: 0
+
+  OrderType:
+      name: type
+      type: string
+      in: query
+      required: true
+      enum:
+      - limit
+      - market
+      - stopLoss
+      description: |
+        Order Type:
+          * `limit` - 限价交易
+          * `market` -市价交易
+          * `stopLoss` -市价止损
+
+  OrderSide:
+    type: string
+    name: side
+    in: query
+    required: true
+    enum:
+    - buy
+    - sell
+    description: >
+      Order Side:
+        * `buy` - Buy
+        * `sell` - Sell
+
+
+definitions:
+  AccessTokenResponse:
+    description: "初始化AccessKey返回对象"
+    type: object
+    properties:
+      accessKey:
+        type: string
+      accessSecret:
+        type: string
+  DepositApplyResponse:
+    type: object
+    description: "充币申请返回对象"
+    properties:
+      address:
+        type: string
+      currency:
+        type: string
+      memo:
+        type: string
+  WithdrawApplyResponse:
+    type: object
+    description: "提币申请返回对象"
+    properties:
+      transactionNum:
+        type: string
+      clientOrderID:
+        type: string
+  DepositListResponse:
+    type: object
+    description: "充币查询列表结果"
+    properties:
+      time:
+        type: string
+      amount:
+        type: number
+      currency:
+        type: string
+        description: "币种"
+      merchangtUserID:
+        type: string
+        description: "商户用户唯一标识"
+      transactionNum:
+        type: string
+        description: "Dipbit系统交易ID"
+      txID:
+        type: string
+        description: "链上transactionID"
+      status:
+        type: string
+        enum:
+          - PROCESSING
+          - SUCCESS
+          - FAIL
+  WithdrawListResponse:
+    type: object
+    description: "提币查询列表结果"
+    properties:
+      time:
+        type: string
+      amount:
+        type: number
+      currency:
+        type: string
+        description: "币种"
+      transactionNum:
+        type: string
+        description: "Dipbit系统交易ID"
+      clientOrderID:
+        type: string
+        description: "客户方系统请求唯一ID"
+      txID:
+        type: string
+        description: "链上transactionID"
+      status:
+        type: string
+        enum:
+          - PROCESSING
+          - SUCCESS
+          - FAIL
+  BalanceResponse:
+    type: object
+    properties:
+      currency:
+        type: string
+      available:
+        type: number
+      freeze:
+        type: number
+  AutoExchangeRateResponse:
+      type: object
+      description: "获取盘口汇率返回对象"
+      properties:
+        symbol:
+          type: string
+        rate:
+          type: number
+  AutoExchangeFeeResponse:
+        type: object
+        description: "获取盘口费率返回对象"
+        properties:
+          symbol:
+            type: string
+          buyRate:
+            type: number
+          sellRate:
+            type: number
+  ErrorResponse:
+    type: object
+    properties:
+      msg:
+        type: string
+      code:
+        type: string
+
+
+  Currency:
+    type: object
+    description: "货币"
+    properties:
+      currency:
+        type: string
+        description: "数字货币代号"
+      precision:
+        type: number
+        description: "数字货币精度"
+      miniWithdrawAmount:
+        type: number
+        description: "最小提币额度"
+
+  AutoExchangeResponse:
+    type: object
+    description: "自动汇兑配置返回对象"
+    properties:
+      merchantID:
+        type: string
+      created:
+        type: string
+      modified:
+        type: string
+      withdrawAutoExchange:
+        type: integer
+      depositAutoExchange:
+        type: integer
+      currency:
+        type: string
+      exchangeCurrency:
+        type: string
+
+  AutoExchangeListResponse:
+    type: object
+    description: "自动汇兑配置查询列表结果"
+    properties:
+      merchantID:
+        type: string
+      created:
+        type: string
+      modified:
+        type: string
+      withdrawAutoExchange:
+        type: integer
+      depositAutoExchange:
+        type: integer
+      currency:
+        type: string
+      exchangeCurrency:
+        type: string
+
+  OrderStatus:
+    type: string
+    enum:
+    - new
+    - canceled
+    - rejected
+    - expired
+    - filled
+    - partially_filled
+  OrderFill:
+    type: object
+    properties:
+      price:
+        type: number
+      quantity:
+        type: number
+      commission:
+        type: number
+      commissionCurrency:
+        type: string
+
+  OrderResponse:
+    type: object
+    properties:
+      code:
+        type: string
+        enum:
+        - success
+        - duplicate_order_id
+        - fail
+      message:
+        type: string
+      symbol:
+        type: string
+      type:
+        type: string
+      side:
+        type: string
+      clientOrderId:
+        type: string
+      triggerPrice:
+        type: number
+      price:
+        type: number
+      quantity:
+        type: number
+      timestamp:
+        type: string
+      fills:
+        type: array
+        items:
+          $ref: '#/definitions/OrderFill'
+      status:
+        $ref: '#/definitions/OrderStatus'
+
+  TickerResponse:
+    type: object
+    properties:
+      symbol:
+        type: string
+      latestPrice:
+        type: number
+
+  SymbolListResponse:
+    type: object
+    description: "交易对查询结果"
+    properties:
+      currency:
+        type: string
+      symbols:
+        type: array
+        items:
+          type: string
+paths:
+  /api/v1/merchant/key/init:
+    post:
+      tags:
+        - User
+      operationId: init
+      description: "初始化accessKey"
+      summary: init merchant ACCESS_KEY and ACCESS_TOKEN
+      parameters:
+        - $ref: '#/parameters/MerchantID'
+        - $ref: '#/parameters/Token'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: "Access Key信息"
+          schema:
+            $ref: '#/definitions/AccessTokenResponse'
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/v1/merchant/currencies:
+    get:
+      security:
+        - apiKeyId: []
+        - apiSignature: []
+      tags:
+        - Asset
+      operationId: getCurrencies
+      description: 获取所有的支持币种
+      summary: 获取所有支持的币种
+      parameters:
+        - $ref: '#/parameters/MerchantID'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Currency'
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/v1/merchant/balance:
+    get:
+      security:
+        - apiKeyId: []
+        - apiSignature: []
+      tags:
+        - Asset
+      operationId: balance
+      description: "查询余额"
+      summary: "查询余额"
+      parameters:
+        - $ref: '#/parameters/MerchantID'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/BalanceResponse'
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/v1/merchant/deposit/apply:
+    post:
+      security:
+        - apiKeyId: []
+        - apiSignature: []
+      tags:
+        - Deposit
+      operationId: depositApply
+      description: 申请充币
+      summary: 申请充币
+      parameters:
+        - $ref: '#/parameters/MerchantID'
+        - $ref: '#/parameters/MerchantUserID'
+        - $ref: '#/parameters/Currency'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/DepositApplyResponse'
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/v1/merchant/deposit/list:
+    get:
+      security:
+        - apiKeyId: []
+        - apiSignature: []
+      tags:
+        - Deposit
+      operationId: getDepositList
+      description: "获取充币记录"
+      summary: "获取充币记录"
+      parameters:
+        - $ref: '#/parameters/MerchantID'
+        - $ref: '#/parameters/MerchantUserIDOptional'
+        - $ref: '#/parameters/Limit'
+        - $ref: '#/parameters/Offset'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/definitions/DepositListResponse'
+              hasNext:
+                type: boolean
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/v1/merchant/withdraw/apply:
+    post:
+      security:
+        - apiKeyId: []
+        - apiSignature: []
+      tags:
+        - Withdraw
+      operationId: withdrawApply
+      description: "申请提币"
+      summary: "申请提币"
+      parameters:
+        - $ref: '#/parameters/MerchantID'
+        - $ref: '#/parameters/MerchantUserID'
+        - $ref: '#/parameters/Currency'
+        - $ref: '#/parameters/Amount'
+        - $ref: '#/parameters/Address'
+        - $ref: '#/parameters/ClientOrderID'
+        - $ref: '#/parameters/Memo'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/WithdrawApplyResponse'
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/v1/merchant/auto/exchange/config:
+    post:
+      security:
+      - apiKeyId: []
+      - apiSignature: []
+      tags:
+      - AutoExchange
+      operationId: initMerchantAutoExchangeConfig
+      description: "自动汇兑参数配置"
+      summary: "自动汇兑参数配置"
+      parameters:
+      - $ref: '#/parameters/MerchantID'
+      - $ref: '#/parameters/Option'
+      - $ref: '#/parameters/WithdrawAutoExchange'
+      - $ref: '#/parameters/DepositAutoExchange'
+      - $ref: '#/parameters/Currency'
+      - $ref: '#/parameters/ExchangeCurrency'
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: "Auto Exchange Config"
+          schema:
+            $ref: '#/definitions/AutoExchangeResponse'
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /api/v1/merchant/auto/exchange/withdraw/apply:
+      post:
+        security:
+          - apiKeyId: []
+          - apiSignature: []
+        tags:
+          - Withdraw
+        operationId: withdrawAutoExchangeApply
+        description: "申请自动汇兑提币"
+        summary: "申请自动汇兑提币"
+        parameters:
+          - $ref: '#/parameters/MerchantID'
+          - $ref: '#/parameters/MerchantUserID'
+          - $ref: '#/parameters/Currency'
+          - $ref: '#/parameters/Amount'
+          - $ref: '#/parameters/TargetCurrency'
+          - $ref: '#/parameters/Address'
+          - $ref: '#/parameters/ClientOrderID'
+          - $ref: '#/parameters/Memo'
+        produces:
+          - application/json
+        responses:
+          '200':
+            description: Success
+            schema:
+              $ref: '#/definitions/WithdrawApplyResponse'
+          '401':
+            description: "ERROR Response"
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+  /api/v1/merchant/withdraw/list:
+    get:
+      security:
+        - apiKeyId: []
+        - apiSignature: []
+      tags:
+        - Withdraw
+      operationId: withdrawList
+      description: "提币记录查询"
+      summary: "提币记录查询"
+      parameters:
+        - $ref: '#/parameters/ClientOrderIDOptional'
+        - $ref: '#/parameters/MerchantID'
+        - $ref: '#/parameters/Limit'
+        - $ref: '#/parameters/Offset'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/definitions/WithdrawListResponse'
+              hasNext:
+                type: boolean
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /api/v1/merchant/auto/exchange/rate:
+      get:
+        security:
+          - apiKeyId: []
+          - apiSignature: []
+        tags:
+          - AutoExchange
+        operationId: autoExchangeRate
+        description: "自动汇兑汇率"
+        summary: "自动汇兑汇率"
+        parameters:
+          - $ref: '#/parameters/MerchantID'
+          - $ref: '#/parameters/Symbol'
+        produces:
+          - application/json
+        responses:
+          '200':
+            description: Success
+            schema:
+              $ref: '#/definitions/AutoExchangeRateResponse'
+          '401':
+            description: "ERROR Response"
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+  /api/v1/merchant/auto/exchange/fee:
+      get:
+        security:
+          - apiKeyId: []
+          - apiSignature: []
+        tags:
+          - AutoExchange
+        operationId: autoExchangeFee
+        description: "自动汇兑费率"
+        summary: "自动汇兑费率"
+        parameters:
+          - $ref: '#/parameters/MerchantID'
+          - $ref: '#/parameters/Symbol'
+        produces:
+          - application/json
+        responses:
+          '200':
+            description: Success
+            schema:
+              $ref: '#/definitions/AutoExchangeFeeResponse'
+          '401':
+            description: "ERROR Response"
+            schema:
+              $ref: '#/definitions/ErrorResponse'
+  /api/v1/merchant/auto/exchange/list:
+    get:
+      security:
+      - apiKeyId: []
+      - apiSignature: []
+      tags:
+      - AutoExchange
+      operationId: autoExchangelist
+      description: "自动汇兑记录查询"
+      summary: "自动汇兑记录查询"
+      parameters:
+      - $ref: '#/parameters/MerchantID'
+      - $ref: '#/parameters/CurrencyOptional'
+      - $ref: '#/parameters/Limit'
+      - $ref: '#/parameters/Offset'
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/definitions/AutoExchangeListResponse'
+              hasNext:
+                type: boolean
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /api/v1/merchant/symbol/list:
+    get:
+      security:
+      - apiKeyId: []
+      - apiSignature: []
+      tags:
+      - Trade
+      operationId: getSymbolList
+      description: "获取交易对信息"
+      summary: "获取交易对信息"
+      parameters:
+      - $ref: '#/parameters/MerchantID'
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  $ref: '#/definitions/SymbolListResponse'
+              hasNext:
+                type: boolean
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /api/v1/merchant/order:
+    post:
+      security:
+      - apiKeyId: []
+      - apiSignature: []
+      tags:
+      - Trade
+      description: "创建订单"
+      operationId: createOrder
+      summary: "创建订单"
+      parameters:
+      - $ref: '#/parameters/MerchantID'
+      - name: symbol
+        in: query
+        description: "交易对，例如：BTC_USDT"
+        required: true
+        type: string
+      - $ref: '#/parameters/OrderType'
+      - $ref: '#/parameters/OrderSide'
+      - name: clientOrderId
+        in: query
+        description: "客户端唯一订单id"
+        required: true
+        type: string
+      - name: triggerPrice
+        in: query
+        description: "触发价格，当type为stopLoss时必输"
+        type: number
+      - name: price
+        in: query
+        description: "订单委托价格，当type 为limit时必输"
+        type: number
+      - name: quantity
+        in: query
+        description: "订单委托数量"
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OrderResponse'
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  '/api/v1/merchant/cancelOrder':
+    post:
+      security:
+      - apiKeyId: []
+      - apiSignature: []
+      tags:
+      - Trade
+      description: "取消订单"
+      operationId: cancelOrder
+      summary:  "取消订单"
+      parameters:
+      - $ref: '#/parameters/MerchantID'
+      - name: clientOrderId
+        in: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OrderResponse'
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  '/api/v1/merchant/getOrder':
+    get:
+      security:
+      - apiKeyId: []
+      - apiSignature: []
+      tags:
+      - Trade
+      operationId: getById
+      description:  "查询订单信息"
+      summary:  "查询订单信息"
+      parameters:
+      - $ref: '#/parameters/MerchantID'
+      - name: clientOrderId
+        in: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OrderResponse'
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /api/v1/merchant/openOrders:
+    get:
+      security:
+      - apiKeyId: []
+      - apiSignature: []
+      tags:
+      - Trade
+      operationId: getOpenOrderList
+      description:  "查询未完成订单"
+      summary:  "查询未完成订单"
+      parameters:
+      - $ref: '#/parameters/MerchantID'
+      - name: symbol
+        in: query
+        type: string
+        required: true
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/OrderResponse'
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  '/api/v1/merchant/ticker/price':
+    get:
+      security:
+      - apiKeyId: []
+      - apiSignature: []
+      tags:
+      - Trade
+      operationId: getLatestPrice
+      description:  "查询最新价格"
+      summary:  "查询最新价格"
+      parameters:
+      - $ref: '#/parameters/MerchantID'
+      - name: symbol
+        in: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/TickerResponse'
+        '401':
+          description: "ERROR Response"
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+
+
+
+# Added by API Auto Mocking Plugin
+host: paygw.dipbit.com
+basePath: /
+schemes:
+ - https
